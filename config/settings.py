@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 import os
+os.environ["PATH"] += os.pathsep + r"C:\Program Files (x86)\Graphviz\bin"
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,9 +24,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-+l$vhg&tcu!8el_8e*##1!n^p=5f7ia#udfs(0zw$g#ben14l)'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['code4boxing.onrender.com',
+    'localhost',
+    '127.0.0.1']
 
 #Configurar Redirect
 LOGIN_URL = '/login/'
@@ -137,7 +140,10 @@ MEDIA_ROOT = 'media'
 import dj_database_url
 
 DATABASES = {
-    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
+    'default': dj_database_url.config(
+        default='sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 #Email para los usuarios
