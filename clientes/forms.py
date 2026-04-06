@@ -7,7 +7,7 @@ class ClienteForm(forms.ModelForm):
         fields = [
             'nombre', 'apellido', 'fecha_nacimiento', 'genero',
             'telefono', 'email', 'direccion', 'contacto_emergencia',
-            'certificado_medico', 'documento_adicional', 'tipo_inscripcion',
+            'certificado_medico', 'documento_adicional', 'tipo_inscripcion', 'curp',
         ]
         widgets = {
             'fecha_nacimiento': forms.DateInput(attrs={

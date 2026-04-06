@@ -1,0 +1,34 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Code4Boxing{% endblock %}</title>
+
+    <link rel="stylesheet" href="{% static 'clientes/styles.css' %}">
+</head>
+<!--El  bueno es el otro el de clientes template clientes-->
+<body>
+
+    <!-- 🔥 NAVBAR -->
+    <nav class="navbar">
+        <div class="nav-left">
+            🥊 Code4Boxing
+        </div>
+
+        <div class="nav-right">
+            {% if user.is_authenticated %}
+                <span>{{ user.username }}</span>
+                <a href="{% url 'logout' %}">Cerrar sesión</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- 🔥 CONTENIDO -->
+    <div class="main-container">
+        {% block content %}
+        {% endblock %}
+    </div>
+
+</body>
+</html>

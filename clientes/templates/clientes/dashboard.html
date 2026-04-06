@@ -1,0 +1,35 @@
+{% extends 'clientes/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<h1 class="dashboard-title">Dashboard 🥊</h1>
+
+<div class="cards">
+
+    <div class="card">
+        <span>Total Clientes</span>
+        <h2>{{ total_clientes }}</h2>
+    </div>
+
+    <div class="card">
+        <span>Activos</span>
+        <h2>{{ activos }}</h2>
+    </div>
+
+    <div class="card">
+        <span>Inactivos</span>
+        <h2>{{ inactivos }}</h2>
+    </div>
+
+</div>
+
+<h2 class="section-title">Acciones rápidas</h2>
+
+<div class="actions">
+    <a href="{% url 'crear_cliente' %}" class="btn">➕ Nuevo Cliente</a>
+    <a href="{% url 'lista_clientes' %}" class="btn">📋 Ver Clientes</a>
+    <a href="{% url 'exportar_clientes' %}" class="btn">📤 Exportar CSV</a>
+</div>
+{% endblock %}

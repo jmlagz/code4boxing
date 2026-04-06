@@ -1,0 +1,35 @@
+Levantar el sistema 
+
+entrar a d:\code4boxing
+ejecutar venv\Scripts\activate
+
+python manage.py runserver
+
+Login desde PC http://127.0.0.1:8000/login/
+
+Usuario: admin
+Contraseña: AdminBoxing2026!
+AdminBoxing2026!
+
+Cambios en la BD, cada vez que cambies models.py
+python manage.py makemigrations
+python manage.py migrate
+
+
+Login Render
+https://code4boxing.onrender.com/
+
+
+ADMIN DJANGO
+http://127.0.0.1:8000/admin/
+
+
+USUARIOS DE pruebas
+
+usuario1
+usuariodepruebas
+Usuario
+pruebas
+usuario@pruebas.com
+
+usuario2

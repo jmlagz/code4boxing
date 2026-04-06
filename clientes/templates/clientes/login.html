@@ -1,0 +1,114 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    
+
+<!-- <h3 class="login-title">CODE 4 BOXING</h3> -->
+   
+<title>Login - Code 4 Boxing</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+        background: 
+        linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.9)),
+        url("{% static 'clientes/img/fondo_grises.png' %}") no-repeat center center;
+        background-size: cover;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: 'Segoe UI', sans-serif;
+        }
+
+
+        .login-card {
+            background-color: #111;
+            padding: 40px;
+            border-radius: 12px;
+            width: 350px;
+            box-shadow: 0 0 20px rgba(255, 0, 0, 0.2);
+        }
+
+        .login-title {
+            color: #fff;
+            text-align: center;
+            margin-bottom: 30px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .form-label {
+            color: #ccc;
+        }
+
+        .form-control {
+            background-color: #222;
+            border: 1px solid #444;
+            color: #fff;
+        }
+
+        .form-control:focus {
+            background-color: #222;
+            border-color: red;
+            box-shadow: none;
+            color: #fff;
+        }
+
+        .btn-login {
+            background-color: red;
+            border: none;
+            width: 100%;
+            margin-top: 15px;
+        }
+
+        .btn-login:hover {
+            background-color: #cc0000;
+        }
+
+        .error-msg {
+            color: #ff4d4d;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    
+      <!--  <img src="{% static 'clientes/img/C4B_logo_ch.png' %}" alt="Code4Boxing Logo"> -->
+     <h3 class="login-title">CODE 4 BOXING</h3>
+     
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label class="form-label">Usuario</label>
+            <input type="text" name="username" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <button type="submit" class="btn btn-login text-white">
+            Ingresar
+        </button>
+        <a href="{% url 'password_reset' %}" style="color: #ccc; display:block; text-align:center; margin-top:10px;">
+    ¿Olvidaste tu contraseña?
+</a>
+
+        {% if error %}
+            <div class="error-msg">
+                Usuario o contraseña incorrectos
+            </div>
+        {% endif %}
+    </form>
+</div>
+
+</body>
+</html>

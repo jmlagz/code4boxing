@@ -1,0 +1,23 @@
+Estoy evolucionando Code4Boxing hacia un sistema más escalable.
+
+Contexto actual:
+- Django monolítico
+- Una app principal ("clientes")
+- Funcionalidad básica ya implementada
+- Deployment en Render
+
+Quiero escalar a:
+- Multi-gimnasio (multi-tenant)
+- Roles de usuario (admin, staff)
+- Modularización del sistema
+
+Necesito:
+- Recomendaciones prácticas (no teoría)
+- Cómo reorganizar el proyecto
+- Qué separar (apps, servicios, etc.)
+- Qué evitar
+
+Enfócate en decisiones reales de arquitectura.
+
+Pregunta:
+[tu duda]

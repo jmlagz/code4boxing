@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Code4Boxing{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'clientes/styles.css' %}">
+</head>
+<!--Este es el bueno-->
+<body>
+
+   <body>
+
+<div class="layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">
+            🥊 C4B
+        </div>
+
+        <nav class="menu">
+            <a href="{% url 'dashboard' %}">Dashboard</a>
+            <a href="{% url 'lista_clientes' %}">Clientes</a>
+            <a href="{% url 'crear_cliente' %}">Nuevo Cliente</a>
+        </nav>
+
+        <div class="user">
+            <span>{{ request.user.username }}</span>
+            <a href="{% url 'logout' %}">Cerrar sesión</a>
+        </div>
+    </aside>
+
+    <!-- CONTENIDO -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+</div>
+
+</body>
+
+</body>
+</html>

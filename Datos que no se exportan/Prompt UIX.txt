@@ -1,0 +1,21 @@
+Estoy trabajando en la interfaz de Code4Boxing.
+
+Contexto:
+- Uso HTML + CSS (sin frameworks pesados)
+- Ya tengo un base.html
+- Busco diseño tipo aplicación (SaaS)
+- Estilo: oscuro, moderno, tipo dashboard profesional
+
+Necesito mejorar la experiencia de usuario.
+
+Quiero:
+- Diseño limpio y consistente
+- Componentes reutilizables
+- Buen uso de layout (cards, navbar, sidebar)
+- Código simple (sin sobreingeniería)
+
+No quiero teoría de diseño.
+Quiero implementación directa.
+
+Tarea:
+[describe lo que quieres mejorar]

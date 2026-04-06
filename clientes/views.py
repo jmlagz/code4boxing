@@ -3,25 +3,93 @@ from django.http import HttpResponse
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from datetime import datetime
-from .models import Cliente
 from .forms import ClienteForm
+from .models import Cliente, Gym
+
+
+#Para el login
+from django.contrib.auth import authenticate, login
+from django.shortcuts import render, redirect
+
+#para el logout
+from django.contrib.auth import logout
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+#Login requerido para acceder a todas las paginas
+from django.contrib.auth.decorators import login_required
+
+#Vista de login
+from django.utils.http import url_has_allowed_host_and_scheme
+
+def login_view(request):
+    error = None
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+
+            next_url = request.GET.get('next')
+
+            if next_url and url_has_allowed_host_and_scheme(next_url, allowed_hosts=None):
+                if '/reset/' not in next_url:
+                    return redirect(next_url)
+
+            return redirect('dashboard')
+
+        else:
+            error = True
+
+    return render(request, 'clientes/login.html', {'error': error})
+
+
+#Dashboard
+@login_required
+def dashboard(request):
+    gym = Gym.objects.get(owner=request.user)
+    return render(request, 'clientes/dashboard.html')
+    total_clientes = Cliente.objects.filter(gym=gym).count()
+    activos = Cliente.objects.filter(gym=gym, activo=True).count()
+    inactivos = Cliente.objects.filter(gym=gym, activo=False).count()
+
+    return render(request, 'clientes/dashboard.html', {
+        'total_clientes': total_clientes,
+        'activos': activos,
+        'inactivos': inactivos,
+    })
 
 #Vistas para gestión de clientes
 from django.core.paginator import Paginator
 from django.db.models import Q
 
+#✅ LISTA DE CLIENTES CON BÚSQUEDA Y PAGINACIÓN
+@login_required
 def lista_clientes(request):
     query = request.GET.get('q')
 
+    # 🔥 MULTI-TENANT (BASE)
+    gym = Gym.objects.filter(owner=request.user).first()
+    lista = Cliente.objects.filter(gym=gym)
+
+    if not gym:
+        return redirect('dashboard')  # o donde quieras mandar si no tiene gym
+
+
     if query:
-        lista = Cliente.objects.filter(
+        lista = lista.filter(
             Q(nombre__icontains=query) |
             Q(apellido__icontains=query) |
             Q(telefono__icontains=query) |
             Q(email__icontains=query)
         )
-    else:
-        lista = Cliente.objects.all()
+    
 
     paginator = Paginator(lista, 10)  # 👈 10 por página
     page_number = request.GET.get('page')
@@ -34,11 +102,22 @@ def lista_clientes(request):
 
 
 # ✅ CREAR CLIENTE
+
+@login_required
 def crear_cliente(request):
     if request.method == 'POST':
         form = ClienteForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            cliente = form.save(commit=False)
+
+            # 🔥 MULTI-TENANT
+            gym = Gym.objects.get(owner=request.user)
+            cliente.gym = gym
+
+            # 🔥 AUDITORÍA
+            cliente.creado_por = request.user
+
+            cliente.save()
             return redirect('lista_clientes')
     else:
         form = ClienteForm()
@@ -46,18 +125,26 @@ def crear_cliente(request):
     return render(request, 'clientes/crear_cliente.html', {'form': form})
 
 # ✅ DETALLE DE CLIENTE
+from django.shortcuts import get_object_or_404
+@login_required
 def detalle_cliente(request, cliente_id):
-    cliente = Cliente.objects.get(id=cliente_id)
-    return render(request, 'clientes/detalle_cliente.html', {'cliente': cliente})
+        # 🔥 MULTI-TENANT
+        gym = Gym.objects.get(owner=request.user)
+        cliente = get_object_or_404(Cliente, id=cliente_id, gym=gym)
+        return render(request, 'clientes/detalle_cliente.html', {'cliente': cliente})
 
 # ✅ EDITAR CLIENTE
+@login_required
 def editar_cliente(request, cliente_id):
-    cliente = Cliente.objects.get(id=cliente_id)
+    gym = Gym.objects.get(owner=request.user)
+    cliente = get_object_or_404(Cliente, id=cliente_id, gym=gym)
 
     if request.method == 'POST':
         form = ClienteForm(request.POST, request.FILES, instance=cliente)
         if form.is_valid():
-            form.save()
+            cliente = form.save(commit=False)
+            cliente.actualizado_por = request.user
+            cliente.save()
             return redirect('lista_clientes')
     else:
         form = ClienteForm(instance=cliente)
@@ -66,14 +153,16 @@ def editar_cliente(request, cliente_id):
 
 # ✅ ELIMINAR CLIENTE
 def baja_cliente(request, cliente_id):
-    cliente = Cliente.objects.get(id=cliente_id)
+    gym = Gym.objects.get(owner=request.user)
+    cliente = get_object_or_404(Cliente, id=cliente_id, gym=gym)
     cliente.activo = False
     cliente.save()
     return redirect('lista_clientes')
 
 # ✅ GENERAR PDF PROFESIONAL
 def generar_contrato(request, cliente_id):
-    cliente = Cliente.objects.get(id=cliente_id)
+    gym = Gym.objects.get(owner=request.user)
+    cliente = get_object_or_404(Cliente, id=cliente_id, gym=gym)
 
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = f'attachment; filename="contrato_{cliente.id}.pdf"'
@@ -141,10 +230,29 @@ def generar_contrato(request, cliente_id):
     
     return response
 
+#Para el dashboard
+from django.contrib.auth.decorators import login_required
+@login_required
+def dashboard(request):
+    gym = Gym.objects.get(owner=request.user)
+    total_clientes = Cliente.objects.filter(gym=gym).count()
+    #total_clientes = Cliente.objects.count()
+    activos = Cliente.objects.filter(activo=True).count()
+    inactivos = Cliente.objects.filter(activo=False).count()
+
+    return render(request, 'clientes/dashboard.html', {
+        'total_clientes': total_clientes,
+        'activos': activos,
+        'inactivos': inactivos,
+    })
+
+
 # Return the generated PDF response
 import csv
-
+@login_required
 def exportar_clientes_csv(request):
+    gym = Gym.objects.get(owner=request.user)
+    clientes = Cliente.objects.filter(gym=gym)
     response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="clientes.csv"'
 
@@ -164,8 +272,7 @@ def exportar_clientes_csv(request):
         'Fecha Inscripcion'
     ])
 
-    clientes = Cliente.objects.all()
-
+    
     for c in clientes:
         writer.writerow([
             c.nombre,
@@ -180,6 +287,5 @@ def exportar_clientes_csv(request):
             'Activo' if c.activo else 'Inactivo',
             c.fecha_inscripcion
         ])
-
 
     return response

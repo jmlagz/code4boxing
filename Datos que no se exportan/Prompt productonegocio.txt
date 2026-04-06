@@ -1,0 +1,19 @@
+Estoy convirtiendo Code4Boxing en un producto SaaS para gimnasios.
+
+Ya tengo:
+- Gestión de clientes
+- Login
+- Dashboard básico
+- Exportación de datos
+
+Quiero evolucionarlo a producto real.
+
+Ayúdame a definir:
+- Funcionalidades clave para venderlo
+- Qué agregar primero
+- Qué evitar (features innecesarias)
+- Cómo hacerlo atractivo para clientes reales
+
+Responde como si fueras CTO/product manager.
+
+No teoría, solo decisiones prácticas.
