@@ -27,6 +27,7 @@ body {
 /* LAYOUT */
 .layout {
     display: flex;
+    height: 100vh;
 }
 
 /* DASHBOARD */
@@ -61,14 +62,25 @@ body {
 .sidebar {
     width: 220px;
     height: 100vh;
+    flex-shrink: 0; /* 🔥 clave */
+    box-sizing: border-box; /* 🔥 ESTO LO ARREGLA TODO */
     background: #0d0d0d;
     border-right: 1px solid #1f1f1f;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    /*justify-content: space-between;*/
     padding: 20px;
 }
-
+/* Evita que el sidebar se estire y arruine el layout */
+html, body {
+    height: 100%;
+    overflow: hidden; /* 🔥 mata el scroll global */
+}
+/* El layout principal se encarga de manejar el scroll interno */
+.layout {
+    height: 100vh;
+    overflow: hidden;
+}
 
 /*  BOTONES */
 .btn-login {
@@ -174,6 +186,16 @@ h1, h2, h3, p, span {
 .menu a:hover {
     color: red;
 }
+/* MENÚ ocupa el espacio disponible */
+.menu {
+    margin-top: 20px;
+}
+
+/* ESTO ES LA MAGIA 🧙 */
+.user {
+    margin-top: auto;
+    padding-bottom: 10px;
+}
 
 /* USER */
 .user {
@@ -191,6 +213,7 @@ h1, h2, h3, p, span {
 .main-content {
     flex: 1;
     padding: 40px;
+    overflow-y: auto; /* 🔥 aquí vive el scroll */
 }
 
 /* BASE */
@@ -219,7 +242,7 @@ h1, h2, h3, p, span {
     align-items: center;
     margin-bottom: 25px;
 }
-
+ 
 .header h1 {
     margin: 0;
 }

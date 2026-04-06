@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from reportlab.pdfgen import canvas
+#from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from datetime import datetime
 from .forms import ClienteForm
 from .models import Cliente, Gym
 
+#PDF para producción
+def generar_pdf(request):
+    try:
+        from reportlab.pdfgen import canvas
+    except ImportError:
+        return HttpResponse("Error: PDF no disponible", status=500)
 
 #Para el login
 from django.contrib.auth import authenticate, login
