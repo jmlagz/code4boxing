@@ -268,10 +268,6 @@ def servir_media(request, path):
 from django.urls import re_path
 from clientes.views import servir_media
 
-urlpatterns += [
-    re_path(r'^media/(?P<path>.*)$', servir_media),
-]
-
 
 # Return the generated PDF response
 import csv
