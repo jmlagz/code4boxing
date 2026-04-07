@@ -250,6 +250,28 @@ def dashboard(request):
         'inactivos': inactivos,
     })
 
+#para la ruta de los archivos subidos
+from django.http import FileResponse, Http404
+import os
+from django.conf import settings
+
+def servir_media(request, path):
+    file_path = os.path.join(settings.MEDIA_ROOT, path)
+
+    if os.path.exists(file_path):
+        return FileResponse(open(file_path, 'rb'))
+    else:
+        raise Http404("Archivo no encontrado")
+    
+
+#Rutas de los archivos
+from django.urls import re_path
+from clientes.views import servir_media
+
+urlpatterns += [
+    re_path(r'^media/(?P<path>.*)$', servir_media),
+]
+
 
 # Return the generated PDF response
 import csv
