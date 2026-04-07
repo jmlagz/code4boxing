@@ -105,6 +105,7 @@ def lista_clientes(request):
 @login_required
 def crear_cliente(request):
     if request.method == 'POST':
+        print("FILES:", request.FILES)
         form = ClienteForm(request.POST, request.FILES)
         if form.is_valid():
             cliente = form.save(commit=False)
@@ -117,6 +118,10 @@ def crear_cliente(request):
             cliente.creado_por = request.user
 
             cliente.save()
+            if cliente.certificado_medico:
+                print("ARCHIVO GUARDADO EN:", cliente.certificado_medico.path)
+            else:
+                print("NO SE GUARDÓ EL ARCHIVO")
             return redirect('lista_clientes')
     else:
         form = ClienteForm()
